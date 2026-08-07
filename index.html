@@ -150,6 +150,17 @@
             grid-column: span 1;
         }
 
+        .card.ielts {
+            grid-column: span 1;
+            background: rgba(109, 40, 217, 0.15);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .card.ielts:hover {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
         .copy-btn {
             margin-top: 12px;
             padding: 8px 20px;
@@ -268,8 +279,20 @@
 
             <a href="https://javohir995.pythonanywhere.com/" target="_blank" class="card projects">
                 <div class="card-icon">🏫</div>
-                <h3 class="card-title">Recent project</h3>
+                <h3 class="card-title">Ta'lim loyihasi</h3>
                 <p class="card-subtitle">Zamonaviy ta'lim ekotizimi</p>
+            </a>
+
+            <a href="https://mfy.crmuz.uk/" target="_blank" class="card projects">
+                <div class="card-icon">🗺️</div>
+                <h3 class="card-title">Mahalla platformasi</h3>
+                <p class="card-subtitle">Mahalla boshqaruv tizimi</p>
+            </a>
+
+            <a href="https://ielts.crmuz.uk/" target="_blank" class="card ielts">
+                <div class="card-icon">🎓</div>
+                <h3 class="card-title">IELTS Reading</h3>
+                <p class="card-subtitle">True / False / Not Given mashqi</p>
             </a>
         </div>
     </div>
