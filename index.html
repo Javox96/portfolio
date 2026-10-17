@@ -1,120 +1,488 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Javohir Sattorov | Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  body {
-    min-height: 100vh;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: -apple-system, sans-serif;
-    overflow: hidden;
-  }
+        /* ── SPLASH SCREEN ── */
+        #splash {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease;
+        }
 
-  /* ── CANVAS FONI ── */
-  #wave-canvas {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-  }
+        #splash.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-  /* ── BLUR OVERLAY ── */
-  .blur-overlay {
-    position: fixed;
-    inset: 0;
-    backdrop-filter: blur(60px);
-    -webkit-backdrop-filter: blur(60px);
-    z-index: 1;
-  }
+        #hello-svg {
+            width: min(80vw, 380px);
+            height: auto;
+            overflow: visible;
+        }
 
-  /* ── CONTENT ── */
-  .content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    color: #fff;
-  }
+        .hl {
+            font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            font-weight: 300;
+            fill: #ffffff;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            transform-box: fill-box;
+            transform-origin: center;
+            transform: translateY(12px);
+        }
 
-  h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 12px;
-    background: linear-gradient(135deg, #FF6B6B, #FFA500);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+        /* ── MAIN CONTENT ── */
+        .container {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
 
-  p { color: rgba(255,255,255,0.5); font-size: 1.1rem; }
-</style>
+        .container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        :root {
+            --bg-primary: #0F172A;
+            --bg-card: #1E293B;
+            --gradient-instagram: linear-gradient(135deg, #F77737 0%, #E1306C 50%, #833AB4 100%);
+            --gradient-pink-orange: linear-gradient(135deg, #FF6B6B 0%, #FFA500 100%);
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --shadow-glow: 0 0 20px rgba(247, 119, 55, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background-color: #0a0a0a;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* ── TO'LQIN FON ── */
+        #wave-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .blur-overlay {
+            position: fixed;
+            inset: 0;
+            backdrop-filter: blur(60px);
+            -webkit-backdrop-filter: blur(60px);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: var(--gradient-pink-orange);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .motto {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+        }
+
+        .bio {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--text-primary);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .card.telegram {
+            grid-column: span 1;
+        }
+
+        .card.telegram:hover {
+            box-shadow: 0 0 30px rgba(0, 136, 204, 0.5);
+        }
+
+        .card.instagram {
+            grid-column: span 1;
+            position: relative;
+        }
+
+        .card.instagram::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: var(--gradient-instagram);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .card.whatsapp {
+            grid-column: span 1;
+        }
+
+        .card.projects {
+            grid-column: span 1;
+        }
+
+        .card.ielts {
+            grid-column: span 1;
+            background: rgba(109, 40, 217, 0.15);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .card.ielts:hover {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
+        .copy-btn {
+            margin-top: 12px;
+            padding: 8px 20px;
+            background: var(--gradient-pink-orange);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .copy-btn.copied {
+            background: #10B981;
+        }
+
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 30px 15px;
+            }
+
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card.telegram,
+            .card.instagram,
+            .card.whatsapp,
+            .card.projects {
+                grid-column: span 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero,
+        .card {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .hero {
+            animation-delay: 0.1s;
+        }
+
+        .card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .card:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .card:nth-child(4) {
+            animation-delay: 0.5s;
+        }
+    </style>
 </head>
 <body>
 
-<canvas id="wave-canvas"></canvas>
-<div class="blur-overlay"></div>
+    <!-- TO'LQIN FON -->
+    <canvas id="wave-canvas"></canvas>
+    <div class="blur-overlay"></div>
 
-<div class="content">
-  <h1>Javohir Sattorov</h1>
-  <p>Python Developer · Web Developer</p>
-</div>
+    <!-- SPLASH SCREEN -->
+    <div id="splash">
+        <svg id="hello-svg" viewBox="0 0 340 100" xmlns="http://www.w3.org/2000/svg">
+            <text class="hl" x="10"   y="82" font-size="88">𝓱</text>
+            <text class="hl" x="72"   y="82" font-size="88">𝓮</text>
+            <text class="hl" x="120"  y="82" font-size="88">𝓵</text>
+            <text class="hl" x="148"  y="82" font-size="88">𝓵</text>
+            <text class="hl" x="176"  y="82" font-size="88">𝓸</text>
+        </svg>
+    </div>
 
-<script>
-  const canvas = document.getElementById('wave-canvas');
-  const ctx    = canvas.getContext('2d');
+    <div class="container">
+        <section class="hero">
+            <h1>Javohir Sattorov</h1>
+            <p class="motto">"Code with passion, build with purpose"</p>
+            <p class="bio">Python Developer | Web Developer | Telegram Bot Specialist<br><span style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 400;">Django • HTML • CSS • SCSS • Pug</span></p>
+        </section>
 
-  let W, H, t = 0;
+        <div class="bento-grid">
+            <a href="https://t.me/Javokh96" target="_blank" class="card telegram">
+                <div class="card-icon">✈️</div>
+                <h3 class="card-title">Telegram</h3>
+                <p class="card-subtitle">@Javokh96</p>
+                <button class="copy-btn" id="copyTelegram">Copy Username</button>
+            </a>
 
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
+            <a href="https://instagram.com/javohir.sattor0v" target="_blank" class="card instagram">
+                <div class="card-icon">📸</div>
+                <h3 class="card-title">Instagram</h3>
+                <p class="card-subtitle">@javohir.sattor0v</p>
+            </a>
 
-  // To'lqin parametrlari
-  const blobs = [
-    { x: 0.2, y: 0.3, r: 0.45, dx: 0.0003, dy: 0.0002, color: 'rgba(255,255,255,0.18)' },
-    { x: 0.7, y: 0.6, r: 0.50, dx: -0.0002, dy: 0.0003, color: 'rgba(255,255,255,0.12)' },
-    { x: 0.5, y: 0.1, r: 0.40, dx: 0.0002, dy: -0.0002, color: 'rgba(255,255,255,0.10)' },
-    { x: 0.1, y: 0.8, r: 0.35, dx: 0.0003, dy: -0.0003, color: 'rgba(255,255,255,0.08)' },
-    { x: 0.9, y: 0.2, r: 0.38, dx: -0.0003, dy: 0.0002, color: 'rgba(255,255,255,0.09)' },
-  ];
+            <a href="https://wa.me/998902999295" target="_blank" class="card whatsapp">
+                <div class="card-icon">💬</div>
+                <h3 class="card-title">WhatsApp</h3>
+                <p class="card-subtitle">Message me</p>
+            </a>
 
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
+            <a href="tel:+998902999295" class="card phone">
+                <div class="card-icon">📞</div>
+                <h3 class="card-title">Call Me</h3>
+                <p class="card-subtitle">+998 90 299 92 95</p>
+            </a>
 
-    // Qora fon
-    ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(0, 0, W, H);
+            <a href="https://javohir995.pythonanywhere.com/" target="_blank" class="card projects">
+                <div class="card-icon">🏫</div>
+                <h3 class="card-title">Ta'lim loyihasi</h3>
+                <p class="card-subtitle">Zamonaviy ta'lim ekotizimi</p>
+            </a>
 
-    // Har bir blob — sinus harakati bilan
-    blobs.forEach((b, i) => {
-      const cx = (Math.sin(t * b.dx * 1000 + i) * 0.3 + b.x) * W;
-      const cy = (Math.cos(t * b.dy * 1000 + i * 1.3) * 0.3 + b.y) * H;
-      const r  = b.r * Math.min(W, H);
+            <a href="https://mfy.crmuz.uk/" target="_blank" class="card projects">
+                <div class="card-icon">🗺️</div>
+                <h3 class="card-title">Mahalla platformasi</h3>
+                <p class="card-subtitle">Mahalla boshqaruv tizimi</p>
+            </a>
 
-      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      grad.addColorStop(0, b.color);
-      grad.addColorStop(1, 'transparent');
+            <a href="https://ielts.crmuz.uk/" target="_blank" class="card ielts">
+                <div class="card-icon">🎓</div>
+                <h3 class="card-title">IELTS Reading</h3>
+                <p class="card-subtitle">True / False / Not Given mashqi</p>
+            </a>
+        </div>
+    </div>
 
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
-      ctx.fill();
-    });
+    <script>
+        // ── TO'LQIN FON ANIMATSIYA ──
+        const canvas = document.getElementById('wave-canvas');
+        const ctx    = canvas.getContext('2d');
+        let W, H, t = 0;
 
-    t += 1;
-    requestAnimationFrame(draw);
-  }
+        function resize() {
+            W = canvas.width  = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
 
-  draw();
-</script>
+        const blobs = [
+            { x: 0.2, y: 0.3, r: 0.45, dx: 0.00001, dy: 0.0000075, color: 'rgba(255,255,255,0.18)' },
+            { x: 0.7, y: 0.6, r: 0.50, dx: -0.0000075, dy: 0.00001, color: 'rgba(255,255,255,0.12)' },
+            { x: 0.5, y: 0.1, r: 0.40, dx: 0.000009,   dy: -0.0000075, color: 'rgba(255,255,255,0.10)' },
+            { x: 0.1, y: 0.8, r: 0.35, dx: 0.00001,    dy: -0.000009, color: 'rgba(255,255,255,0.08)' },
+            { x: 0.9, y: 0.2, r: 0.38, dx: -0.000009,  dy: 0.0000075, color: 'rgba(255,255,255,0.09)' },
+        ];
+
+        function drawWave() {
+            ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, W, H);
+
+            blobs.forEach((b, i) => {
+                const cx = (Math.sin(t * b.dx * 1000 + i)       * 0.3 + b.x) * W;
+                const cy = (Math.cos(t * b.dy * 1000 + i * 1.3) * 0.3 + b.y) * H;
+                const r  = b.r * Math.min(W, H);
+
+                const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+                grad.addColorStop(0, b.color);
+                grad.addColorStop(1, 'transparent');
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.fillStyle = grad;
+                ctx.fill();
+            });
+
+            t++;
+            requestAnimationFrame(drawWave);
+        }
+        drawWave();
+
+        // ── HARF-HARF PAYDO BO'LISH ANIMATSIYA ──
+        const letters   = document.querySelectorAll('.hl');
+        const splash    = document.getElementById('splash');
+        const container = document.querySelector('.container');
+
+        const gap = 130; // ms — har bir harf orasidagi vaqt
+
+        letters.forEach((el, i) => {
+            setTimeout(() => {
+                el.style.opacity   = '1';
+                el.style.transform = 'translateY(0)';
+            }, 300 + i * gap);
+        });
+
+        // Oxirgi harf paydo bo'lgandan 800ms keyin yo'qoladi
+        const totalTime = 300 + (letters.length - 1) * gap;
+
+        setTimeout(() => {
+            // Harflar birma-bir chiqib ketadi
+            letters.forEach((el, i) => {
+                setTimeout(() => {
+                    el.style.opacity   = '0';
+                    el.style.transform = 'translateY(-10px)';
+                }, i * 80);
+            });
+        }, totalTime + 800);
+
+        // Splash fade-out
+        setTimeout(() => {
+            splash.classList.add('fade-out');
+        }, totalTime + 800 + letters.length * 80 + 200);
+
+        // Portfolio ko'rinadi
+        setTimeout(() => {
+            splash.style.display = 'none';
+            container.classList.add('visible');
+        }, totalTime + 800 + letters.length * 80 + 800);
+
+        // ── COPY TELEGRAM ──
+        document.getElementById('copyTelegram').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const username = '@Javokh96';
+            navigator.clipboard.writeText(username).then(() => {
+                const btn = document.getElementById('copyTelegram');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.textContent = 'Copy Username';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        });
+    </script>
 </body>
 </html>
